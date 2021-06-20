@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="biot_savart",  # Replace with your own username
-    version="0.2.1",
+    version="0.2.2",
     author="Mingde Yin",
     author_email="mdsuper@hotmail.com",
     description="Magnetic Field Computation Library.",
@@ -23,5 +23,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    include_package_data=True,
+    package_data={'': ['static/*.svg']},
     python_requires='>=3.6',
 )

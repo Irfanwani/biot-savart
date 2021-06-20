@@ -69,9 +69,9 @@ An Example Coil (`coil.txt`):
 20,10,0,1
 ```
 
-Here's what the coil looks like (`coil.svg`), plotted using `plot_coil("coil.txt")`.
+Here's what the coil looks like (`static/coil.svg`), plotted using `plot_coil("coil.txt")`.
 
-![Coil](coil.svg)
+![Coil](biot_savart/static/coil.svg)
 
 
 #### Understanding the Coordinate System and Indexing a Finished Target Volume
@@ -95,11 +95,11 @@ Parameters Breakdown
 
 Example: Helmholtz Coils, plotted at z = 0
 
-![helmholtz](helmholtz.svg)
+![helmholtz](biot_savart/static/helmholtz.svg)
 
 Results in a graph that looks like:
 
-![helmholtz_field](helmholtz_field.svg)
+![helmholtz_field](biot_savart/static/helmholtz_field.svg)
 
 # A Strategy for Complex Coil Systems
 If you want to plot the effects of multiple coils, you can simply save several target volumes with the same `box_size`, `start_point`, and `vol_resolution`, then add them together (See Helmholtz Coil Example Below).
@@ -144,9 +144,9 @@ bs.plot_fields(fields, positions, which_plane='x', level=5, num_contours=50)
 ```
 Output:
 
-![coil](coil.svg)
+![coil](biot_savart/static/coil.svg)
 
-![coil_field](coil_field.svg)
+![coil_field](biot_savart/static/coil_field.svg)
 
 ### Helmholtz Coils
 ```python
@@ -174,9 +174,9 @@ h_total = h1 + h2
 bs.plot_fields(h_total, pos1, which_plane='z', level=0, num_contours=50)
 ```
 Output:
-![helmholtz](helmholtz.svg)
+![helmholtz](biot_savart/static/helmholtz.svg)
 
-![helmholtz_field](helmholtz_field.svg)
+![helmholtz_field](biot_savart/static/helmholtz_field.svg)
 
 # Key Optimization Techniques
 The tool uses a couple of techniques to accelerate computation and increase precision.

@@ -87,7 +87,7 @@ def plot_coil(*input_filenames):
     ax.set_zlabel("$z$ (cm)")
 
     for input_filename in input_filenames:
-        coil_points = np.array(parse_coil(input_filename))
+        coil_points, _ = parse_coil(input_filename)
 
         ax.plot3D(coil_points[:, 0], coil_points[:, 1],
                   coil_points[:, 2], lw=2)
