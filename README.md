@@ -117,6 +117,13 @@ Similarly, `create_Bx_circle()`, `create_By_circle()`, `create_By_circle()` prod
 
 # Examples
 ### Basic example using coil.txt
+`coil.txt`:
+```
+0,0,0,1
+10,0,0,1
+10,10,0,1
+20,10,0,1
+```
 ```python
 import biot_savart as bs
 
