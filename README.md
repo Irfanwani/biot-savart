@@ -2,7 +2,7 @@
 
 This tool numerically solves for the 3D vector magnetic field around an arbitrarily shaped coil specified by the user, in a discrete and finite volume surrounding the coil. The code is optimized to use NumPy vectorization, and uses Richardson extrapolation to get the best accuracy for a specified mesh size.
 
-Latest Version: V4.3 (June 20, 2020)
+Latest Version: V5.0 (June 20, 2021)
 
 By Mingde Yin and Ryan Zazo
 
@@ -117,10 +117,17 @@ Similarly, `create_Bx_circle()`, `create_By_circle()`, `create_By_circle()` prod
 
 # Examples
 ### Basic example using coil.txt
+`coil.txt`:
+```
+0,0,0,1
+10,0,0,1
+10,10,0,1
+20,10,0,1
+```
 ```python
-import biot_savart_v4_3 as bs
+import biot_savart as bs
 
-bs.write_target_volume("coil.txt", "targetvol", (30, 15, 15), (-5, -0.5, -2.5), 1, 1)
+bs.write_target_volume("coil.txt", "coil", (30, 15, 15), (-5, -0.5, -2.5), 1, 1)
 # generates a target volume from the coil stored at coil.txt
 # uses a 30 x 15 x 15 bounding box, starting at (-5, -0.5, -2.5)
 # uses 1 cm resolution
@@ -128,11 +135,11 @@ bs.write_target_volume("coil.txt", "targetvol", (30, 15, 15), (-5, -0.5, -2.5), 
 bs.plot_coil("coil.txt")
 # plots the coil stored at coil.txt
 
-volume = bs.read_target_volume("targetvol")
+fields, positions = bs.read_target_volume("coil")
 # reads the volume we created
 
-bs.plot_fields(volume, (30, 15, 15), (-5, -0.5, -2.5), 1, which_plane='x', level=5, num_contours=50)
-# plots the fields we just produced, feeding in the same box size and start points.
+bs.plot_fields(fields, positions, which_plane='x', level=5, num_contours=50)
+# plots the fields we just produced
 # plotting along the plane x = 5, with 50 contours
 ```
 Output:
@@ -143,7 +150,7 @@ Output:
 
 ### Helmholtz Coils
 ```python
-import biot_savart_v4_3 as bs
+import biot_savart as bs
 
 bs.helmholtz_coils("helm1.txt", "helm2.txt", 50, 5, 2, 1)
 # makes a pair of helmholtz coils
@@ -157,14 +164,14 @@ bs.write_target_volume("helm1.txt", "targetvol1", (10, 10, 10), (-5, -5, -5), 0.
 bs.write_target_volume("helm2.txt", "targetvol2", (10, 10, 10), (-5, -5, -5), 0.5, 0.5)
 # use a target volume of size 10, centred about origin
 
-h1 = bs.read_target_volume("targetvol1")
-h2 = bs.read_target_volume("targetvol2")
+h1, pos1 = bs.read_target_volume("targetvol1")
+h2, pos2 = bs.read_target_volume("targetvol2")
 # produce the target volumes we want
 
 # use linear superposition of magnetic fields, to get the combined effects of multiple coils
 h_total = h1 + h2
 
-bs.plot_fields(h_total, (10, 10, 10), (-5, -5, -5), 0.5, which_plane='z', level=0, num_contours=50)
+bs.plot_fields(h_total, pos1, which_plane='z', level=0, num_contours=50)
 ```
 Output:
 ![helmholtz](helmholtz.svg)
@@ -194,3 +201,4 @@ code to work with non-integer step sizes and non-integer levels
 * v4.1: Minor change in function indexing to use more numpy, cleaning up for export
 * v4.2: Changed the linspaces a bit to make everything more symmetric
 * v4.3: Added in many functions for plotting rectangular and circular coils, cleaned up functions to be more consistent, and flexible.
+* v5.0: Rewrite of some major parts of code, make the core computation engine fully vectorized
