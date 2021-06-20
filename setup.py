@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="biot_savart",  # Replace with your own username
-    version="0.2",
+    version="0.2.1",
     author="Mingde Yin",
     author_email="mdsuper@hotmail.com",
     description="Magnetic Field Computation Library.",

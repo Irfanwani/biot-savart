@@ -89,8 +89,8 @@ def plot_coil(*input_filenames):
     for input_filename in input_filenames:
         coil_points = np.array(parse_coil(input_filename))
 
-        ax.plot3D(coil_points[0, :], coil_points[1, :],
-                  coil_points[2, :], lw=2)
+        ax.plot3D(coil_points[:, 0], coil_points[:, 1],
+                  coil_points[:, 2], lw=2)
     for axis in [ax.xaxis, ax.yaxis, ax.zaxis]:
         axis.set_major_locator(ticker.MultipleLocator(tick_spacing))
     plt.tight_layout()
