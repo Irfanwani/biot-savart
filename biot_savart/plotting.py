@@ -2,19 +2,14 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.ticker as ticker
 import numpy as np
-from .biot_savart import parse_coil
+from .inputs import parse_coil
 
 # Plotting routines
 
 
-def plot_fields(
-        Bfields,
-        box_size,
-        start_point,
-        vol_resolution,
-        which_plane='z',
-        level=0,
-        num_contours=50):
+def plot_fields(fields: np.ndarray, positions: np.ndarray,
+                which_plane='z', level=0, num_contours=50) -> None:
+    # Ryan's Magic Code
     '''
     Plots the set of Bfields in the given region, at the specified resolutions.
 
@@ -27,35 +22,29 @@ def plot_fields(
     num_contours: THe amount of contours on the contour plot.
 
     '''
-
     # filled contour plot of Bx, By, and Bz on a chosen slice plane
-    X = np.linspace(start_point[0],
-                    box_size[0] + start_point[0],
-                    int(box_size[0] / vol_resolution) + 1)
-    Y = np.linspace(start_point[1],
-                    box_size[1] + start_point[1],
-                    int(box_size[1] / vol_resolution) + 1)
-    Z = np.linspace(start_point[2],
-                    box_size[2] + start_point[2],
-                    int(box_size[2] / vol_resolution) + 1)
+    X = positions[:, 0, 0, 0]
+    Y = positions[0, :, 0, 1]
+    Z = positions[0, 0, :, 2]
 
     if which_plane == 'x':
 
         converted_level = np.where(X >= level)
-        B_sliced = [Bfields[converted_level[0]
+
+        B_sliced = [fields[converted_level[0]
                             [0], :, :, i].T for i in range(3)]
         x_label, y_label = "y", "z"
         x_array, y_array = Y, Z
     elif which_plane == 'y':
         converted_level = np.where(Y >= level)
-        B_sliced = [Bfields[:, converted_level[0]
+        B_sliced = [fields[:, converted_level[0]
                             [0], :, i].T for i in range(3)]
         x_label, y_label = "x", "z"
         x_array, y_array = X, Z
     else:
         converted_level = np.where(Z >= level)
         B_sliced = [
-            Bfields[:, :, converted_level[0][0], i].T for i in range(3)]
+            fields[:, :, converted_level[0][0], i].T for i in range(3)]
         x_label, y_label = "x", "y"
         x_array, y_array = X, Y
 
@@ -108,30 +97,18 @@ def plot_coil(*input_filenames):
     plt.show()
 
 
-def plot_quiver(Bfields, box_size, start_point, vol_resolution):
-
-    # filled contour plot of Bx, By, and Bz on a chosen slice plane
-    x = np.linspace(start_point[0],
-                    box_size[0] + start_point[0],
-                    int(box_size[0] / vol_resolution) + 1)
-    y = np.linspace(start_point[1],
-                    box_size[1] + start_point[1],
-                    int(box_size[1] / vol_resolution) + 1)
-    z = np.linspace(start_point[2],
-                    box_size[2] + start_point[2],
-                    int(box_size[2] / vol_resolution) + 1)
-
-    X, Y, Z = np.meshgrid(x, y, z)
-
-    u = Bfields[:, 0, :, 0]
-    v = Bfields[:, 0, :, 1]
-    w = Bfields[:, 0, :, 2]
+def plot_quiver(fields: np.ndarray, positions: np.ndarray) -> None:
+    '''
+    3D Quiver plot of the thing in a volume
+    '''
 
     ax = plt.figure().add_subplot(projection='3d')
 
-    mags = np.linalg.norm(Bfields, axis=3)
+    mags = np.linalg.norm(fields, axis=3)
 
-    q = ax.quiver(X, Y, Z, u, v, w, cmap="coolwarm")
-    q.set_array(mags.reshape(np.prod(mags.shape)))  # Ravel the array
+    q = ax.quiver(positions[:,:,:,0], positions[:,:,:,1], positions[:,:,:,2],
+                  fields[:,:,:,0], fields[:,:,:,1], fields[:,:,:,2], cmap="coolwarm", normalize=True)
+    q.set_array(mags.ravel())  # Ravel the array
+    plt.colorbar(q, cmap="coolwarm")
 
     plt.show()

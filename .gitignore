@@ -1,0 +1,4 @@
+biot_savart.egg-info
+*.pyc
+build
+dist
