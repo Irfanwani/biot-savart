@@ -145,6 +145,41 @@ def helmholtz_coils(fname1, fname2, numSegments, radius, spacing, current):
     f.close()
 
 
+def maxwell_coils(fname1, fname2, fname3, numSegments, radius, current):
+    '''
+    Creates a set of Maxwell coils that are parallel to the X-Y plane.
+
+    fname1: Name of the file where the first coil will be saved.
+    fname2: Name of the file where the second coil will be saved.
+    fname3: Name of the file where the third coil will be saved.
+    numSegments: Number of segments per coil
+    radius: Radius of the coils
+    '''
+    f = open(fname1, "w")
+    line = ""
+    for i in range(0, numSegments, 1):
+        line = str(np.cos(2 * np.pi * (i) / (numSegments - 1)) * radius * np.sqrt(4/7)) + "," + str(np.sin(2 * np.pi *
+                                                                                            (i) / (numSegments - 1)) * radius * np.sqrt(4/7)) + "," + str(-radius * np.sqrt(3/7) /2) + "," + str(current) + "\n"
+        f.write(line)
+    f.close()
+
+    f = open(fname2, "w")
+    line = ""
+    for i in range(0, numSegments, 1):
+        line = str(np.cos(2 * np.pi * (i) / (numSegments - 1)) * radius * np.sqrt(4/7)) + "," + str(np.sin(2 * np.pi *
+                                                                                            (i) / (numSegments - 1)) * radius * np.sqrt(4/7)) + "," + str(radius * np.sqrt(3/7)/2) + "," + str(current) + "\n"
+        f.write(line)
+    f.close()
+
+    f = open(fname3, "w")
+    line = ""
+    for i in range(0, numSegments, 1):
+        line = str(np.cos(2 * np.pi * (i) / (numSegments - 1)) * radius) + "," + str(np.sin(2 * np.pi *
+                                                                                            (i) / (numSegments - 1)) * radius) + "," + str(0) + "," + str(current) + "\n"
+        f.write(line)
+    f.close()
+
+
 def create_Bx_circle(fname, numSegments, radius, spacing, current, center):
     '''
     Creates a coil on the Y-Z plane that produces a B_x field.

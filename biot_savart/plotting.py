@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from matplotlib.colors import Normalize
 import matplotlib.ticker as ticker
 import numpy as np
 from .inputs import parse_coil
@@ -54,10 +55,14 @@ def plot_fields(fields: np.ndarray, positions: np.ndarray,
     fig, axes = plt.subplots(nrows=1, ncols=4, figsize=(10, 5))
     axes[0].set_ylabel(y_label + " (cm)")
 
+    cmap = cm.magma
+    normalizer=Normalize(Bmin,Bmax)
+    im=cm.ScalarMappable(norm=normalizer, cmap=cmap)
+
     for i in range(3):
         contours = axes[i].contourf(x_array, y_array, B_sliced[i],
                                     vmin=Bmin, vmax=Bmax,
-                                    cmap=cm.magma, levels=num_contours)
+                                    cmap=cmap, levels=num_contours)
         axes[i].set_xlabel(x_label + " (cm)")
         axes[i].set_title(
             "$\\mathcal{B}$" +
@@ -65,7 +70,7 @@ def plot_fields(fields: np.ndarray, positions: np.ndarray,
                 component_labels[i]))
 
     axes[3].set_aspect(20)
-    fig.colorbar(contours, cax=axes[3], extend='both')
+    fig.colorbar(im, cax=axes[3])
 
     plt.tight_layout()
 
@@ -104,11 +109,16 @@ def plot_quiver(fields: np.ndarray, positions: np.ndarray) -> None:
 
     ax = plt.figure().add_subplot(projection='3d')
 
-    mags = np.linalg.norm(fields, axis=3)
+    mags = np.linalg.norm(fields, axis=-1)
+
+    cmap = cm.magma
+    normalizer=Normalize(0, np.amax(mags))
+    im=cm.ScalarMappable(norm=normalizer, cmap=cmap)
 
     q = ax.quiver(positions[:,:,:,0], positions[:,:,:,1], positions[:,:,:,2],
-                  fields[:,:,:,0], fields[:,:,:,1], fields[:,:,:,2], cmap="coolwarm", normalize=True)
-    q.set_array(mags.ravel())  # Ravel the array
-    plt.colorbar(q, cmap="coolwarm")
+                  fields[:,:,:,0], fields[:,:,:,1], fields[:,:,:,2], cmap=cmap, normalize=True)
+    q.set_array(np.repeat(mags.ravel(), 3))  # Ravel the array
+
+    plt.colorbar(im)
 
     plt.show()

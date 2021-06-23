@@ -11,11 +11,12 @@ setuptools.setup(
     description="Magnetic Field Computation Library.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/vuthalab/biot_savart",
+    url="https://github.com/vuthalab/biot-savart",
     license="BSD-3-Clause",
     install_requires=[
         "numpy",
-        "matplotlib"
+        "matplotlib",
+        "scipy"
     ],
     packages=setuptools.find_packages(),
     classifiers=[

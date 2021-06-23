@@ -10,6 +10,7 @@ All lengths are in cm, B-field is in G
 
 import numpy as np
 from .inputs import parse_coil
+from scipy.integrate import simpson, trapz
 
 '''
 Feature Wishlist:
@@ -99,7 +100,7 @@ def calculate_field(coil: np.ndarray, current: np.ndarray,
     dl = np.diff(coil, axis=0)  # dl row vectors for each segment
     R_Rprime = positions[:, :, :, np.newaxis, :] - \
         midpoints[np.newaxis, np.newaxis, np.newaxis, :]
-   
+
     # R - R' term, of shape(U, V, W, N, 3)
     mags = np.linalg.norm(R_Rprime, axis=-1)
 
@@ -110,7 +111,7 @@ def calculate_field(coil: np.ndarray, current: np.ndarray,
     # BSL is current * mu/4pi * dl x (R-R') / |R-R'|^3
     # The "area" underneath each rectangle
 
-    return np.sum(elemental_integrands, axis=-2)  # sum of all "areas"
+    return simpson(elemental_integrands, axis=-2)  # sum of all "areas"
 
 
 def generate_positions(box_size: tuple,

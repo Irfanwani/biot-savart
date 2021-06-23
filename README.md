@@ -138,7 +138,7 @@ bs.plot_coil("coil.txt")
 fields, positions = bs.read_target_volume("coil")
 # reads the volume we created
 
-bs.plot_fields(fields, positions, which_plane='x', level=5, num_contours=50)
+bs.plot_fields(fields, positions, which_plane='z', level=5, num_contours=50)
 # plots the fields we just produced
 # plotting along the plane x = 5, with 50 contours
 ```
