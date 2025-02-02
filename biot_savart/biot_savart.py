@@ -10,7 +10,7 @@ All lengths are in cm, B-field is in G
 
 import numpy as np
 from .inputs import parse_coil
-from scipy.integrate import simpson, trapz
+from scipy.integrate import simpson
 
 '''
 Feature Wishlist:
